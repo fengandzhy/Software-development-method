@@ -1,0 +1,3 @@
+rootProject.name = 'SurveyClient'
+
+include ':app'
