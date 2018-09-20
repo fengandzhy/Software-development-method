@@ -24,6 +24,12 @@ CREATE TABLE FeelingRecords (
     id INT(32) PRIMARY KEY AUTO_INCREMENT,
     feeling TINYINT(4),
     time_stamp DATE,
+    is_my_own_feeling TINYINT(1),
     team_id INT(4),
     CONSTRAINT fk_team_id_feeling FOREIGN KEY  (team_id) REFERENCES Teams(team_id)
 );
+
+
+INSERT INTO Teams(team_name) VALUES("Dev team one");
+INSERT INTO Users (nick_name, passwd, first_name, last_name, user_role, registered_for_survey, team_id) VALUES("jim", "", "Jim", "Buchans", "user", 1, 1);
+INSERT INTO Users (nick_name, passwd, first_name, last_name, user_role, registered_for_survey, team_id) VALUES("tod", "", "Tod", "Peaters", "user", 0, 1);
