@@ -8,3 +8,5 @@ class LoginSessionManager extends BaseDatabaseObjectManager {
         return this.conn.query(sql);
     }    
 }
+
+module.exports = LoginSessionManager;

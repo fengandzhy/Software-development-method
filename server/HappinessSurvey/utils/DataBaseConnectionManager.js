@@ -5,7 +5,7 @@ var mysql = require('promise-mysql');
 class DataBaseConnectionManager {
   
   getPool() {
-    if (this.pool) return pool;
+    if (this.pool) return this.pool;
     this.pool = mysql.createPool({
       host     : Config.host,
       user     : Config.user,
@@ -22,7 +22,7 @@ class DataBaseConnectionManager {
   }
 
   destroyConnection(conn) {
-    conn.end();
+    conn.release();
   }
 
 }

@@ -7,30 +7,38 @@ var util = new DateUtil();
 var now = new Date(Date.now());
 
 var r1 = {
-    feeling: 1, 
+    my_feeling: 4, 
+    team_feeling: 2,
     timeStamp: util.convertToSqlDate(now), 
-    teamId: 1, 
-    isMyOwnFeeling: 1
+    teamId: 1
 }
 
 var r2 = {
-    feeling: 4, 
+    my_feeling: 4, 
+    team_feeling: 3,
     timeStamp: util.convertToSqlDate(now), 
-    teamId: 1, 
-    isMyOwnFeeling: 0
+    teamId: 1
 }
 
 beforeAll(async () => {
-    await mgr.establishConnection();
+    return mgr.establishConnection();
 });
+
+afterAll(async () => {
+    return mgr.shutdownConnection();
+})
 
 test("insert first", async () => {
     expect(1).toEqual(1);
-    return mgr.addRecord(r1);
+    return mgr.addRecord(r1).then(result => {
+        expect(result.insertId).toBeGreaterThan(0);
+    });
 });
 
 test("insert second", async () => {
     expect(1).toEqual(1);
-    return mgr.addRecord(r2);
+    return mgr.addRecord(r2).then( result => {
+        expect(result.insertId).toBeGreaterThan(0);
+    });
 });
 

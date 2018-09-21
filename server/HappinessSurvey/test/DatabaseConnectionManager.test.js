@@ -4,13 +4,13 @@ var dataBaseConnectionManager = require('../utils/DataBaseConnectionManager');
 var connection;
 
 beforeAll(async () => {
-    await dataBaseConnectionManager.getConnection().then(conn => {
+    return dataBaseConnectionManager.getConnection().then(conn => {
         connection = conn;
     });
 });
 
 afterAll(async() => {
-    await dataBaseConnectionManager.destroyConnection(connection);
+    return dataBaseConnectionManager.destroyConnection(connection);
 });
 
 it('can create a connection', async () => {

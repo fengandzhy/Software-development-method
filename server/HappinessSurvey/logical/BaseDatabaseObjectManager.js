@@ -12,7 +12,11 @@ class BaseDatabaseObjectManager {
         return this.connection;
     }
 
-
+    shutdownConnection() {
+        if (this.conn) {
+            this.databaseConnectionMgr.destroyConnection(this.conn);
+        }
+    }
 }
 
 module.exports = BaseDatabaseObjectManager;
