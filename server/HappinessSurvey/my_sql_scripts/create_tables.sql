@@ -1,4 +1,5 @@
 
+DROP TABLE PushTokens;
 DROP TABLE LoginSessions;
 DROP TABLE FeelingRecords;
 DROP TABLE Users;
@@ -35,6 +36,15 @@ CREATE TABLE LoginSessions (
     token VARCHAR(63) NOT NULL,
     user_id INT(4),
     CONSTRAINT fk_sess_user_id FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+CREATE TABLE PushTokens (
+    id INT(32) PRIMARY KEY AUTO_INCREMENT,
+    token VARCHAR(63) NOT NULL,
+    user_id INT(4),
+    platform VARCHAR(15),
+    CONSTRAINT fk_pt_user_id FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    CONSTRAINT uni_token_user UNIQUE (token,user_id)
 );
 
 INSERT INTO Teams(team_name) VALUES("Dev team one");
