@@ -5,4 +5,5 @@ class DateUtil {
     }
 }
 
-module.exports = DateUtil;
+var instance = new DateUtil();
+module.exports = instance;

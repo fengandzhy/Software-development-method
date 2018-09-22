@@ -47,6 +47,18 @@ CREATE TABLE PushTokens (
     CONSTRAINT uni_token_user UNIQUE (token,user_id)
 );
 
+CREATE TABLE NotificationTriggerTimes (
+    id INT(32) PRIMARY KEY AUTO_INCREMENT,
+    seconds_to_trigger INT NOT NULL,
+);
+
+CREATE TABLE UserWorkingSpans (
+    id INT(32) PRIMARY KEY AUTO_INCREMENT,
+    start_time TIME,
+    end_time TIME,
+    CONSTRAINT fk_uws_user_id FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
 INSERT INTO Teams(team_name) VALUES("Dev team one");
 INSERT INTO Users (nick_name, passwd, first_name, last_name, user_role, registered_for_survey, team_id) VALUES("jim", "", "Jim", "Buchans", "user", 1, 1);
 INSERT INTO Users (nick_name, passwd, first_name, last_name, user_role, registered_for_survey, team_id) VALUES("tod", "", "Tod", "Peaters", "user", 0, 1);
