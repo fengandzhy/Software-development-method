@@ -9,12 +9,10 @@ class PushTokenRequestProcessor extends BaseAPIRequestProcessor {
         var user_id = this.getLoggedInUserInfo().user_id;
 
         pushTokenManager.setConnection(this.getEstablishedDatabaseConnection());
-        pushTokenManager.addPushToken(user_id, pushToken, platform).then((result) => {
+        return pushTokenManager.addPushToken(user_id, pushToken, platform).then((result) => {
             this.responseWithSuccess(res);
-            return;
         }).catch( err => {
             this.responseWithFailure(res, "Database insertion failed:" + err);
-            return;
         });
     }
 

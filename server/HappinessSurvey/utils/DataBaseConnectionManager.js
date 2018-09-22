@@ -23,7 +23,7 @@ class DataBaseConnectionManager {
 
   destroyConnection(conn) {
     if (conn)
-      conn.release();
+      return conn.release();
   }
 
 }

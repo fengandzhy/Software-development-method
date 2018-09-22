@@ -17,12 +17,11 @@ class RecordFeelingRequestProcessor extends BaseAPIRequestProcessor {
         };
 
         feelingRecordManager.setConnection(this.getEstablishedDatabaseConnection());
-        feelingRecordManager.addRecord(record).then((result) => {
+
+        return feelingRecordManager.addRecord(record).then((result) => {
             this.responseWithSuccess(res);
-            return;
         }).catch( err => {
             this.responseWithFailure(res, "Database insertion failed:" + err);
-            return;
         });
     }
 

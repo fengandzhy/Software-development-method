@@ -16,7 +16,6 @@ class BaseAPIRequestProcessor {
         res.json({
             "result": "OK",
         });
-        dataBaseConnectionManager.destroyConnection(this._databaseConnection);
     }
 
     responseWithFailure(res, reason) {
@@ -24,7 +23,6 @@ class BaseAPIRequestProcessor {
             "result": "Failed",
             "reason": reason
         });
-        dataBaseConnectionManager.destroyConnection(this._databaseConnection);
     }
 
     checkForRequiredRequestParameters(req) {
@@ -40,40 +38,52 @@ class BaseAPIRequestProcessor {
     }
 
     processSubTasks(req, res, next) {
+        return new Promise( (resolve, reject) => {
+            resolve();
+        });
+    }
 
+    connectToDatabase() {
+        return dataBaseConnectionManager.getConnection().then( conn => {
+            loginSessionManager.setConnection(conn);
+            this._databaseConnection = conn;
+        }).catch( err => {
+            this.responseWithFailure(res, "Failed to establish database connection: " + err);
+        });
+    }
+
+    queryUserInfoWith(res, sessToken) {
+        return loginSessionManager.getUserInfo(sessToken).then(result => {
+            if (Array.isArray(result) && result.length == 1) {
+                this._loggedInUserInfo = result[0];
+            } else {
+                this.responseWithFailure(res, "Invalid session.");
+            }
+        }).catch( (err) => {
+            this.responseWithFailure(res, "Invalid session: " + err);
+        });
     }
 
     processRequest(req, res, next) {
         var requiredParams = this.getRequiredRequestParameters();
         if (!this.checkForRequiredRequestParameters(req)) {
             this.responseWithFailure(res, `One of required paramters (${requiredParams}) is missing.`);
-            return;
+            return new Promise( (resolve, reject) => {
+                resolve();
+            });;
         }
-
         var sessToken = req.query.session;
 
-        dataBaseConnectionManager.getConnection().then(conn => {
-            loginSessionManager.setConnection(conn);
-            this._databaseConnection = conn;
-    
-            loginSessionManager.getUserInfo(sessToken).then(result => {
-                
-                if (Array.isArray(result) && result.length == 1) {
-                    this._loggedInUserInfo = result[0];
-                    this.processSubTasks(req, res, next);
-                } else {
-                    this.responseWithFailure(res, "Invalid session");
-                    return;
-                }
-
-            }).catch( (err) => {
-                this.responseWithFailure(res, "Invalid session: " + err);
-                return;
-            })
-        }).catch( err => {
-            this.responseWithFailure(res, "Failed to establish database connection: " + err);
-            return;
-        });    
+        return this.connectToDatabase().then(
+            () => { return this.queryUserInfoWith(res, sessToken); }
+        ).then(
+            () => { 
+                if (typeof (this.getLoggedInUserInfo()) === 'undefined') return;
+                return this.processSubTasks(req, res, next); 
+            }
+        ).then(
+            () => { return dataBaseConnectionManager.destroyConnection(this._databaseConnection); }
+        );
     }
 
     getLoggedInUserInfo() {
