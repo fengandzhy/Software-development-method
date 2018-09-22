@@ -40,7 +40,7 @@ CREATE TABLE LoginSessions (
 
 CREATE TABLE PushTokens (
     id INT(32) PRIMARY KEY AUTO_INCREMENT,
-    token VARCHAR(63) NOT NULL,
+    token VARCHAR(152) NOT NULL,
     user_id INT(4),
     platform VARCHAR(15),
     CONSTRAINT fk_pt_user_id FOREIGN KEY (user_id) REFERENCES Users(user_id),
@@ -63,4 +63,5 @@ INSERT INTO Teams(team_name) VALUES("Dev team one");
 INSERT INTO Users (nick_name, passwd, first_name, last_name, user_role, registered_for_survey, team_id) VALUES("jim", "", "Jim", "Buchans", "user", 1, 1);
 INSERT INTO Users (nick_name, passwd, first_name, last_name, user_role, registered_for_survey, team_id) VALUES("tod", "", "Tod", "Peaters", "user", 0, 1);
 INSERT INTO LoginSessions (token, user_id) VALUES ("a82b2-e324fa02-ac3b42d1", 1);
+INSERT INTO PushTokens(user_id, token, platform) VALUES(1, "7ede6dfd1747c24fb3ba0246730c0254a54855de535ed5057c3406e40a351252", "ios");
 
