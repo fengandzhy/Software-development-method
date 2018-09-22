@@ -40,6 +40,7 @@ router.post('/', function(req, res, next) {
                             "result": "Failed",
                             "reason": "Invalid session."
                         });
+                        loginSessionManager.shutdownConnection();
                         return;
                     }
 
@@ -55,11 +56,15 @@ router.post('/', function(req, res, next) {
                                 "reason": "Database insertion failed."
                             });
                         }
+                        feelingRecordManager.shutdownConnection();
+                        loginSessionManager.shutdownConnection();
+
                     }).catch( err => {
                         res.json({
                             "result": "Failed",
                             "reason": "Database insertion failed."
                         });
+                        feelingRecordManager.shutdownConnection();
                         return;
                     })
                 }).catch( (err) => {
@@ -67,6 +72,7 @@ router.post('/', function(req, res, next) {
                         "result": "Failed",
                         "reason": "Invalid session."
                     });
+                    loginSessionManager.shutdownConnection();
                     return;
                 })
             })
