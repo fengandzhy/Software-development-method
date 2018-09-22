@@ -7,6 +7,12 @@ class PushTokenManager extends BaseDatabaseObjectManager {
 
         return this.conn.query(sql);
     }
+
+    findPushTokens(user_id, platform) {
+        var sql =  `SELECT token FROM PushTokens WHERE user_id='${user_id} AND platform='${platform}'`;
+
+        return this.conn.query(sql);
+    }
 }
 
 module.exports = PushTokenManager;

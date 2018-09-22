@@ -1,11 +1,11 @@
 class BaseDatabaseObjectManager {
     establishConnection() {
-        return this.getConnection().then((conn) => {
+        return this._getConnection().then((conn) => {
             this.conn = conn;
         });
     }
 
-    getConnection() {
+    _getConnection() {
         if (this.connection) return this.connection;
         this.databaseConnectionMgr = require("../utils/DataBaseConnectionManager");
         this.connection = this.databaseConnectionMgr.getConnection();
