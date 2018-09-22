@@ -1,9 +1,9 @@
-
+var BaseDatabaseObjectManager = require("./BaseDatabaseObjectManager");
 var BlueBird = require('bluebird');
 var PushTokenManager = require('./PushTokenManager');
 var apn = require('apn');
 
-class NotificationManager {
+class NotificationManager extends BaseDatabaseObjectManager {
     initIOSSender() {
         var options = {
             token: {
@@ -17,20 +17,50 @@ class NotificationManager {
         this.apnProvider = new apn.Provider(options);
     }
 
+    queryDeviceTokens(user_id, platform) {
+        var sql = `SELECT token FROM PushTokens WHERE user_id='${user_id}' and platform='${platform}'`;
+        return this.databaseConnection.query(sql).then( (result) => {
+            if ( Array.isArray(result) ) {
+                this._tokensForUser = result.map( (r) => {return r.token} );
+            } else {
+                throw "Result not an array.";
+            }
+        }).catch( err => {
+            this._tokensForUser = [];
+        });
+    }
+
     sendNotificationToIOSDevices(user_id, message) {
+        
+        return this.queryDeviceTokens(user_id, 'ios').then(() => {
 
-        let deviceToken = "7ede6dfd1747c24fb3ba0246730c0254a54855de535ed5057c3406e40a351252";
-        var note = new apn.Notification();
+            var promises = [];
+            var promise = new Promise( (resolve, reject) => {
+                resolve();
+            });
+            this._tokensForUser.forEach( deviceToken => {
+                if (deviceToken.length == 64) { // only deal with tokens that are of 64 characters.
 
-        note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-        note.badge = 3;
-        note.sound = "ping.aiff";
-        note.alert = "\uD83D\uDCE7 \u2709 " + message;
-        note.payload = {'messageFrom': 'Patricia'};
-        note.topic = "app.test.HappinessMonitor";
+                    var note = new apn.Notification();
+                    note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+                    note.badge = 3;
+                    note.sound = "ping.aiff";
+                    note.alert = "\uD83D\uDCE7 \u2709 " + message;
+                    note.payload = {'messageFrom': 'Patricia'};
+                    note.topic = "app.test.HappinessMonitor";
+                    promise = this.apnProvider.send(note, deviceToken).catch(e => {
+                        console.log("failed: " + e);
+                    });
 
-        return this.apnProvider.send(note, deviceToken);
+                    promises.push(promise);
+                }
+
+            });
+            return Promise.all(promises);
+        });
     }
 }
 
-module.exports = NotificationManager;
+var instance = new NotificationManager();
+
+module.exports = instance;

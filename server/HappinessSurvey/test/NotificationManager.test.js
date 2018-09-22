@@ -1,8 +1,17 @@
-var NotificationManager = require("../logical/NotificationManager");
-var notificationManager = new NotificationManager();
+var notificationManager = require("../logical/NotificationManager");
+var dataBaseConnectionManager = require('../utils/DataBaseConnectionManager');
+var databaseConnection;
 
 beforeAll(async () => {
     await notificationManager.initIOSSender();
+    return dataBaseConnectionManager.getConnection().then(conn => {
+        notificationManager.setConnection(conn);
+        databaseConnection = conn;
+    });
+});
+
+afterAll(async() => {
+    return dataBaseConnectionManager.destroyConnection(databaseConnection);
 });
 
 test("", async () => {
@@ -10,7 +19,8 @@ test("", async () => {
     expect(1).toEqual(1);
     
     return notificationManager.sendNotificationToIOSDevices(1, "You have a new message").then(result => {
-        expect(result).toEqual({"failed": [], "sent": [{"device": "7ede6dfd1747c24fb3ba0246730c0254a54855de535ed5057c3406e40a351252"}]});
+        expect(Array.isArray(result[0].failed)).toBeTruthy();
+        expect(Array.isArray(result[0].sent)).toBeTruthy();
     });
 
 });
