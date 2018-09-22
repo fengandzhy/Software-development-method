@@ -30,15 +30,6 @@ class NotificationManager {
         note.topic = "app.test.HappinessMonitor";
 
         return this.apnProvider.send(note, deviceToken);
-
-        test("", () => {
-
-            expect(1).toEqual(1);
-            // return apnProvider.send(note, deviceToken).then( (result) => {
-            //     // see documentation for an explanation of result
-            //     expect(result).toEqual({"failed": [], "sent": [{"device": "7ede6dfd1747c24fb3ba0246730c0254a54855de535ed5057c3406e40a351252"}]});
-            // });
-        })
     }
 }
 
