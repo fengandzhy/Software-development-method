@@ -9,7 +9,7 @@ install:
   - cd ./server/HappinessSurvey
   - npm install
 script:
-  - docker build -t "$DOCKER_USERNAME"/happniess .
+  - docker build -t "$DOCKER_USERNAME"/happniess:"$TRAVIS_COMMIT" .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push nleo/happniess
 #deploy:
