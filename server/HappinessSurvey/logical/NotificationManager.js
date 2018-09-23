@@ -35,9 +35,6 @@ class NotificationManager extends BaseDatabaseObjectManager {
         return this.queryDeviceTokens(user_id, 'ios').then(() => {
 
             var promises = [];
-            var promise = new Promise( (resolve, reject) => {
-                resolve();
-            });
             this._tokensForUser.forEach( deviceToken => {
                 if (deviceToken.length == 64) { // only deal with tokens that are of 64 characters.
 
@@ -48,7 +45,7 @@ class NotificationManager extends BaseDatabaseObjectManager {
                     note.alert = "\uD83D\uDCE7 \u2709 " + message;
                     note.payload = {'messageFrom': 'Patricia'};
                     note.topic = "app.test.HappinessMonitor";
-                    promise = this.apnProvider.send(note, deviceToken).catch(e => {
+                    var promise = this.apnProvider.send(note, deviceToken).catch(e => {
                         console.log("failed: " + e);
                     });
 

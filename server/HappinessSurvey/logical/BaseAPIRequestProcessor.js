@@ -43,7 +43,7 @@ class BaseAPIRequestProcessor {
         });
     }
 
-    connectToDatabase() {
+    _connectToDatabase() {
         return dataBaseConnectionManager.getConnection().then( conn => {
             loginSessionManager.setConnection(conn);
             this._databaseConnection = conn;
@@ -74,7 +74,7 @@ class BaseAPIRequestProcessor {
         }
         var sessToken = req.query.session;
 
-        return this.connectToDatabase().then(
+        return this._connectToDatabase().then(
             () => { return this.queryUserInfoWith(res, sessToken); }
         ).then(
             () => { 
