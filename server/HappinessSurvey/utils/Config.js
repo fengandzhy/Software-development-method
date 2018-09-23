@@ -1,7 +1,7 @@
 var Config = {
-    host     : 'localhost',
-    user     : 'max',
-    password : 'Twf120406',
+    host     : 'mysql',
+    user     : 'root',
+    password : 'pwd1234',
     database : 'test'
 };
 
