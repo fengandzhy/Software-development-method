@@ -6,3 +6,6 @@ participate in the survey as volunteers. Team members get notifications from us 
 The server side of the system provides RESTFUL APIs for the Clients (App and Web pages), using node.js and express.js. The notifications are sent out in Cron jobs.
 However, as the notification time schedule can be changed by through web APIs, Cron processes communicate with web request processor processes using message queues.
 
+# What we have learned from this project
+Scrum and TDD are adopted in this project. With TDD, it's very convenient to refactor our code at any time, as test cases give us the confidence that everything is still
+working as they are supposed to be. 
