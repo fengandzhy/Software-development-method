@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/nleo1980/Software-development-method.svg?branch=Sprint1)](https://travis-ci.org/nleo1980/Software-development-method)
 # Purpose
 This project is a practice project built for a researcher to collect data about software development team's feelings for further research. Team members participate in the survey as volunteers. Team members get notifications from us and can submit their and their team's feelings through either the App or Web pages. 
 
