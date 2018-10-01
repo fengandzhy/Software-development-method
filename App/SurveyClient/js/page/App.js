@@ -9,6 +9,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, TouchableHighlight, Alert, Image} from 'react-native';
 
+var Config = require('../../configurations/Config');
+
 class ResultText extends Component {
     render() {
         return (<Text>{this.props.result}</Text>);
@@ -25,11 +27,26 @@ export default class App extends Component {
     }
 
     _onPressCancelButton() {
-        Alert.alert('You pressed the cancel button!')
+        Alert.alert('You pressed the cancel button!');
     }
 
     _onPressSubmitButton() {
-        Alert.alert('You pressed the submit button!')
+        let requestUrl = Config.serverUrl + 'recordfeeling?session=a82b2-e324fa02-ac3b42d1&my_feeling=1&team_feeling=2';
+
+        fetch(requestUrl, {
+            method: 'POST',
+            headers: new Headers({
+                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                'Accept': 'application/json'
+            })
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            if (responseJson.result === 'OK') {
+                Alert.alert("Thank you, your record has been saved.");
+            } else {
+                Alert.alert("Sorry, your submittion was failed, please try again.");
+            }
+        })
     }
 
     longPressSelfButton = () => {
