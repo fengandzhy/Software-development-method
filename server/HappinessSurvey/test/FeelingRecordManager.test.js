@@ -1,36 +1,48 @@
 
-var FeelingRecordManager = require("../logical/FeelingRecordManager");
+var feelingRecordManager = require("../logical/FeelingRecordManager");
 var DateUtil = require("../utils/DateUtil");
-
-var mgr = new FeelingRecordManager();
-var util = new DateUtil();
 var now = new Date(Date.now());
 
+var dataBaseConnectionManager = require('../utils/DataBaseConnectionManager');
+
 var r1 = {
-    feeling: 1, 
-    timeStamp: util.convertToSqlDate(now), 
-    teamId: 1, 
-    isMyOwnFeeling: 1
-}
+    my_feeling: 4, 
+    team_feeling: 2,
+    timeStamp: DateUtil.convertToSqlDate(now), 
+    teamId: 1
+};
 
 var r2 = {
-    feeling: 4, 
-    timeStamp: util.convertToSqlDate(now), 
-    teamId: 1, 
-    isMyOwnFeeling: 0
-}
+    my_feeling: 4, 
+    team_feeling: 3,
+    timeStamp: DateUtil.convertToSqlDate(now), 
+    teamId: 1
+};
+
+var databaseConnection;
 
 beforeAll(async () => {
-    await mgr.establishConnection();
+    return dataBaseConnectionManager.getConnection().then(conn => {
+        feelingRecordManager.setConnection(conn);
+        databaseConnection = conn;
+    });
+});
+
+afterAll(async() => {
+    return dataBaseConnectionManager.destroyConnection(databaseConnection);
 });
 
 test("insert first", async () => {
     expect(1).toEqual(1);
-    return mgr.addRecord(r1);
+    return feelingRecordManager.addRecord(r1).then(result => {
+        expect(result.insertId).toBeGreaterThan(0);
+    });
 });
 
 test("insert second", async () => {
     expect(1).toEqual(1);
-    return mgr.addRecord(r2);
+    return feelingRecordManager.addRecord(r2).then( result => {
+        expect(result.insertId).toBeGreaterThan(0);
+    });
 });
 

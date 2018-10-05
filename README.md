@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # г╟ят
 
 [README in English](README-en.md)
