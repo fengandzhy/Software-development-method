@@ -12,5 +12,5 @@ Express+MySQL+ReactNative
 * 技术介绍: 系统的服务器端使用node.js和express.js为客户端（应用程序和Web页面）提供RESTFUL API。 <br>
 			通知在Cron工作中发出。 但是，由于可以通过Web API更改通知时间表，因此Cron进程使用消息队列与Web请求处理器进程进行通信。
 * 总结: 该项目采用Scrum和TDD。 使用TDD，随时重构我们的代码非常方便，因为测试用例让我们确信所有内容仍然按预期工作。
-
+[测试](http://how-is-it.team16-sdm2018.tk)  
 
