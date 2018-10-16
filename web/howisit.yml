@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: howisit
+spec:
+  loadBalancerIP: 52.187.242.97
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: howisit
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: howisit
+spec:
+  selector:
+    matchLabels:
+      app: howisit
+  replicas: 2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: howisit
+    spec:
+      containers:
+      - image: nleo/howisit:master
+        name: howisit
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: howisit
+        volumeMounts:
+        - name: timezone
+          mountPath: /etc/localtime
+      volumes:
+      - name: timezone
+        hostPath:
+          path: /etc/localtime
+          type: File
