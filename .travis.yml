@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+  - "8"
+sudo: required
+services: 
+  - docker
+
+install:
+  - cd ./server/HappinessSurvey
+  - npm install
+script:
+  - docker build -t "$DOCKER_USERNAME"/happniess:"$TRAVIS_COMMIT" .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push "$DOCKER_USERNAME"/happniess:"$TRAVIS_COMMIT"
+#deploy:
+#  provider: heroku
+#  api_key:
+#    secure: P2MrNelO6oipdDss6gHp9TXLlua7Tk6IcKsesskV/zKVtq9fbX5jXM03aOmHfX41vzI2GdJdazHYM+5JHoDFo//ezdbeEVft2JpGydR1hzYqmZIwRXLbULrI6sGb+D7wZEg/mz8b3p7Y4MvJmA0MGFmcVRWCd4BoC47vcJeVA67/6UgcGRtPP++2pu0zeflvMv1VZXU/IbwqjzvGynCkh5aX6nkoUNW2d1m2+RpMzFobHHCj0lm/wqYKfxr3Bwh/qt4PwWPP1d29HgJ59ivQo7p44+9Ic/6+71frRDff+DeOdcP+IT1S0Hd4KGkj70ITiRMSWACj4E1sqeZ42SZEmVZDuWUohmIc6R9qc05oRP8ZVf4wbf4vKheqT53SSzOy4fNI/C59+21uNDcP7vbW6B64kAhRFXvOZT286ExzCIvtWqYZ6H+NZi45ubz1W41IL5tYEL+dgzvSq1x3Ufiag/snJhcVsC95FYS8pjOZ5LKA11E4zNLr0MtNzi2oqTueoEetWuHt+AMa6wLNF8i2t6zB8ZPAGjSizoLIE15lHdA7h7oKB49pJGM+1U3pjVwkcSvrSdpIOsSbUG13W+S2bMZUJR/wIhmrB23vslTBl47L2hkPxqbR1IjP4HWtmSe+mJ+ZRhl3q9s7xhmg77BUSuSvfjVdRGsCgc3SWYds6PI=
+# app: test-sdm2018

@@ -1,0 +1,40 @@
+# before_script:
+  # - export DOTNET_ROOT=$PATH:/opt/dotnet
+  # - export PATH=$PATH:/opt/dotnet
+stages:
+  - build
+  - test
+  - package
+  - deploy
+
+build:
+  stage: build
+  tags:
+    - react-build
+  script:
+    - uname
+
+unittest:
+  stage: test
+  tags:
+    - react-test
+  script: 
+    - uname
+    # - ng test
+
+package:
+  stage: package
+  tags:
+    - react-package
+  script:
+    - npm install
+    - CI=false npm run build
+    - docker build -t $docker_login/howisit:$CI_COMMIT_REF_NAME .
+    - echo $docker_passwd | docker login -u $docker_login --password-stdin
+    - docker push $docker_login/howisit:$CI_COMMIT_REF_NAME
+deploy:
+  stage: deploy
+  tags:
+    - kube-deploy
+  script:
+    - kubectl apply -f howisit.yml
